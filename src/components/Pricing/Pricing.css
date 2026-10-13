@@ -1,0 +1,35 @@
+.pricing-section { padding: 80px 40px; scroll-margin-top: 96px; background: #0d1627; color: #f5f7fc; }
+.pricing-section__intro { text-align: center; }
+.pricing-section__eyebrow { display: inline-flex; align-items: center; justify-content: center; min-height: 34px; padding: 7px 14px; border: 1px solid #29354a; border-radius: 99px; color: #e9c578; font: 500 13px/20px Outfit, sans-serif; }
+.pricing-section__intro h2 { margin: 24px 0 12px; font: 600 48px/1.21 'Plus Jakarta Sans', Outfit, sans-serif; letter-spacing: -.035em; }
+.pricing-section__intro > p { margin: 0; color: #afbcd2; font: 400 18px/29px Outfit, sans-serif; }
+.pricing-section__cards { display: grid; grid-template-columns: repeat(2, minmax(0, 548px)); justify-content: center; gap: 24px; max-width: 1120px; margin: 24px auto 0; }
+.pricing-card { display: flex; flex-direction: column; justify-content: space-between; min-height: 820px; padding: 36px; border: 1px solid #29354a; border-radius: 24px; background: #070c17; }
+.pricing-card--premium { border-color: #465fff; background: #131f34; }
+.pricing-card__content { min-width: 0; }
+.pricing-card__eyebrow { display: block; color: #afbcd2; font: 500 13px/20px Outfit, sans-serif; }
+.pricing-card--premium .pricing-card__eyebrow { color: #e9c578; }
+.pricing-card h3 { margin: 20px 0; font: 600 28px/43px 'Plus Jakarta Sans', Outfit, sans-serif; letter-spacing: -.035em; }
+.pricing-card__price { display: flex; align-items: baseline; gap: 8px; margin: 0; white-space: nowrap; }
+.pricing-card__price strong { font: 600 56px/67px Outfit, sans-serif; letter-spacing: -.045em; }
+.pricing-card__price span { color: #afbcd2; font: 400 18px/29px Outfit, sans-serif; }
+.pricing-card__description { min-height: 58px; margin: 20px 0 14px; color: #afbcd2; font: 400 18px/29px Outfit, sans-serif; }
+.pricing-card__divider { height: 1px; background: #29354a; }
+.pricing-card__features { display: flex; flex-direction: column; gap: 17px; margin: 20px 0 0; padding: 0; list-style: none; }
+.pricing-card__features li { display: grid; grid-template-columns: 18px minmax(0, 1fr); align-items: start; gap: 12px; color: #afbcd2; font: 400 16px/25px Outfit, sans-serif; }
+.pricing-card__features li > span:first-child { color: #6ae4c6; font-weight: 500; }
+.pricing-card__footer { display: flex; flex-direction: column; align-items: stretch; gap: 14px; }
+.pricing-card__action { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 12px 20px; border-radius: 12px; font: 500 16px/25px Outfit, sans-serif; transition: background .2s ease, transform .2s ease, box-shadow .2s ease; }
+.pricing-card__action:hover { transform: translateY(-2px); }
+.pricing-card__action:focus-visible { outline: 2px solid #e9c578; outline-offset: 4px; }
+.pricing-card__action--basic { border: 1px solid #29354a; background: #0d1627; color: #f5f7fc; }
+.pricing-card__action--basic:hover { background: #17243a; }
+.pricing-card__action--premium { background: #e9c578; color: #070c17; }
+.pricing-card__action--premium:hover { background: #f2d492; box-shadow: 0 8px 28px #e9c57836; }
+.pricing-card__footer > span { color: #afbcd2; text-align: center; font: 400 14px/22px Outfit, sans-serif; }
+.pricing-section__closing { max-width: 1120px; margin: 24px auto 0; color: #afbcd2; text-align: center; font: 400 16px/25px Outfit, sans-serif; }
+.pricing-section__intro, .pricing-card, .pricing-section__closing { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .8s cubic-bezier(.2,.8,.2,1); }
+.pricing-section.is-visible .pricing-section__intro, .pricing-section.is-visible .pricing-card, .pricing-section.is-visible .pricing-section__closing { opacity: 1; transform: translateY(0); }
+.pricing-card--basic { transition-delay: .13s; }.pricing-card--premium { transition-delay: .25s; }.pricing-section__closing { transition-delay: .35s; }
+@media (max-width: 850px) { .pricing-section { padding-inline: 22px; } .pricing-card { padding: 26px; } .pricing-card__description { font-size: 16px; } .pricing-card__features li { font-size: 14px; line-height: 22px; } }
+@media (prefers-reduced-motion: reduce) { .pricing-card__action, .pricing-section__intro, .pricing-card, .pricing-section__closing { transition: none; } }

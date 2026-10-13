@@ -1,0 +1,51 @@
+.intelligence-section { position: relative; padding: 96px 40px 72px; scroll-margin-top: 96px; background: #0d1627; color: #f5f7fc; }
+.intelligence-section__inner { width: min(100%, 1280px); margin: 0 auto; }
+.intelligence-section__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 80px; margin-bottom: 28px; }
+.intelligence-section__eyebrow { display: block; margin-bottom: 14px; color: #e9c578; font: 500 13px/20px Outfit, sans-serif; }
+.intelligence-section__head h2 { margin: 0; font: 600 42px/1.28 'Plus Jakarta Sans', Outfit, sans-serif; letter-spacing: -.025em; }
+.intelligence-section__head > p { width: min(38%, 480px); margin: 0; color: #afbcd2; font: 400 18px/29px Outfit, sans-serif; }
+.intelligence-section__track { height: calc(100vh + 600px); }
+.intelligence-section__stage { position: sticky; top: 116px; display: grid; grid-template-columns: minmax(0, 508fr) minmax(0, 748fr); gap: 24px; height: min(690px, calc(100vh - 116px)); min-height: 602px; }
+.intelligence-card { min-width: 0; height: 100%; overflow: hidden; padding: 27px 28px; border: 1px solid #29354a; border-radius: 24px; background: #070c17; font-family: Outfit, sans-serif; will-change: transform, opacity; }
+.intelligence-card--prism { transition: border-color .25s ease; }
+.intelligence-card__top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.intelligence-card__top h3 { margin: 0; font: 600 20px/31px Outfit, sans-serif; }
+.intelligence-card__badge { padding: 6px 12px; border: 1px solid #29354a; border-radius: 99px; background: #0d1627; color: #e9c578; font: 500 11px/17px Outfit, sans-serif; }
+.intelligence-score { position: relative; width: 200px; height: 200px; margin: 17px auto 16px; }
+.intelligence-score img { position: absolute; inset: 0; display: block; max-width: none; }
+.intelligence-score__value { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.intelligence-score__value strong { font: 600 60px/1.1 Outfit, sans-serif; letter-spacing: -.04em; }
+.intelligence-score__value span { margin-top: 7px; color: #afbcd2; font: 500 12px/19px Outfit, sans-serif; }
+.intelligence-card--score h4 { margin: 0 0 8px; font: 600 24px/1.38 Outfit, sans-serif; }
+.intelligence-card__description { margin: 0; color: #afbcd2; font: 400 16px/25px Outfit, sans-serif; }
+.intelligence-card__divider { height: 1px; margin: 16px 0 13px; background: #29354a; }
+.intelligence-card__micro { display: block; color: #afbcd2; font: 500 11px/19px Outfit, sans-serif; }
+.intelligence-focus { display: grid; gap: 7px; margin-top: 13px; }
+.intelligence-focus__row { display: flex; align-items: center; justify-content: space-between; min-height: 26px; color: #afbcd2; font: 400 16px/25px Outfit, sans-serif; }
+.intelligence-focus__score { font-weight: 500; }
+.intelligence-focus__score--purple { color: #ba96f5; }
+.intelligence-focus__score--gold { color: #e9c578; }
+.intelligence-focus__score--cyan { color: #6ae4c6; }
+.intelligence-card__prism-kicker { display: flex; align-items: center; gap: 12px; }
+.intelligence-card__prism-kicker > span { padding: 6px 12px; border: 1px solid #29354a; border-radius: 99px; background: #0d1627; color: #ba96f5; font: 500 11px/17px Outfit, sans-serif; white-space: nowrap; }
+.intelligence-card__prism-kicker p { margin: 0; color: #afbcd2; font: 400 14px/22px Outfit, sans-serif; }
+.intelligence-card--prism > h3 { margin: 11px 0 6px; font: 600 30px/1.2 'Plus Jakarta Sans', Outfit, sans-serif; letter-spacing: -.025em; }
+.intelligence-card__prism-intro { max-width: 600px; margin: 0 0 14px; color: #afbcd2; font: 400 16px/25px Outfit, sans-serif; }
+.intelligence-question { display: flex; align-items: center; min-height: 43px; padding: 10px 15px; border-radius: 12px; background: #131f34; color: #f5f7fc; font: 400 15px/23px Outfit, sans-serif; }
+.intelligence-question__placeholder { color: #7e8ca4; }
+.intelligence-question__cursor { width: 1px; height: 19px; margin-left: 2px; background: #e9c578; }
+.intelligence-answer { min-height: 244px; margin-top: 14px; padding: 18px 20px; border-radius: 15px; background: #0d1627; }
+.intelligence-answer h4 { margin: 0 0 5px; font: 600 20px/30px Outfit, sans-serif; }
+.intelligence-answer p { margin: 0; color: #afbcd2; font: 400 15px/23px Outfit, sans-serif; }
+.intelligence-chart { display: flex; align-items: end; gap: 16px; height: 151px; margin-top: 8px; }
+.intelligence-chart__column { display: flex; flex: 0 1 185px; flex-direction: column; justify-content: end; gap: 5px; height: 100%; }
+.intelligence-chart__column strong { font: 500 14px/19px Outfit, sans-serif; }
+.intelligence-chart__column > span:last-child { color: #afbcd2; font: 400 12px/17px Outfit, sans-serif; }
+.intelligence-chart__bar { display: block; width: 100%; border-radius: 7px 7px 5px 5px; transform-origin: bottom; }
+.intelligence-chart__bar--last { height: 73px; background: #29354a; }
+.intelligence-chart__bar--current { height: 95px; background: #465fff; }
+.intelligence-answer small { display: block; margin-top: 6px; color: #afbcd2; font: 400 11px/16px Outfit, sans-serif; }
+.intelligence-examples { display: grid; gap: 8px; margin-top: 14px; }
+.intelligence-examples span { display: block; padding: 8px 13px; border-radius: 9px; background: #0d1627; color: #afbcd2; font: 400 14px/20px Outfit, sans-serif; }
+@media (max-width: 1050px) { .intelligence-section { padding-inline: 22px; } .intelligence-section__head { gap: 34px; } .intelligence-card { padding: 22px; } .intelligence-card--prism > h3 { font-size: 25px; } .intelligence-card__description, .intelligence-card__prism-intro { font-size: 14px; line-height: 21px; } }
+@media (prefers-reduced-motion: reduce) { .intelligence-section__track { height: auto; } .intelligence-section__stage { position: relative; top: auto; } .intelligence-card--prism { transition: none; } }

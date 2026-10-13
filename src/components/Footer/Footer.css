@@ -1,0 +1,11 @@
+.site-footer { padding: 48px 40px; background: #070c17; color: #afbcd2; }
+.site-footer__inner { width: min(100%, 1280px); margin: 0 auto; }
+.site-footer__top { display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+.site-footer__logo { position: relative; display: block; flex: none; width: 120px; height: 70px; overflow: hidden; }
+.site-footer__logo img { position: absolute; display: block; width: 134px; height: 134px; max-width: none; left: -10px; top: -36px; object-fit: contain; }
+.site-footer__links { display: flex; align-items: center; gap: 32px; font: 400 15px/24px Outfit, sans-serif; white-space: nowrap; }
+.site-footer__links a { transition: color .2s ease; }
+.site-footer__links a:hover { color: #e9c578; }
+.site-footer__divider { height: 1px; margin: 32px 0; background: #29354a; }
+.site-footer__bottom { display: flex; justify-content: space-between; gap: 32px; font: 400 14px/22px Outfit, sans-serif; }
+@media (max-width: 1050px) { .site-footer__links { gap: 20px; } }
