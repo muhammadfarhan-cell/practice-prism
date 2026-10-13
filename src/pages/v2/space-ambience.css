@@ -1,0 +1,158 @@
+/* V2 ambient system: a shared star scale, with a different spectrum motif per section. */
+body:has(.hero-story__space) .how-section,
+body:has(.hero-story__space) .intelligence-section,
+body:has(.hero-story__space) .experts-section,
+body:has(.hero-story__space) .pricing-section,
+body:has(.hero-story__space) .faq-section,
+body:has(.hero-story__space) .site-footer {
+  position: relative;
+  isolation: isolate;
+}
+
+body:has(.hero-story__space) .how-section__inner,
+body:has(.hero-story__space) .intelligence-section__inner,
+body:has(.hero-story__space) .experts-section__inner,
+body:has(.hero-story__space) .faq-section__inner,
+body:has(.hero-story__space) .site-footer__inner,
+body:has(.hero-story__space) .pricing-section > * { position: relative; z-index: 1; }
+
+body:has(.hero-story__space) .how-section::after,
+body:has(.hero-story__space) .intelligence-section::before,
+body:has(.hero-story__space) .intelligence-section::after,
+body:has(.hero-story__space) .experts-section::before,
+body:has(.hero-story__space) .experts-section::after,
+body:has(.hero-story__space) .pricing-section::before,
+body:has(.hero-story__space) .pricing-section::after,
+body:has(.hero-story__space) .faq-section::before,
+body:has(.hero-story__space) .faq-section::after,
+body:has(.hero-story__space) .site-footer::before,
+body:has(.hero-story__space) .site-footer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Connect: cool starfield surrounding the existing golden orbital graphic. */
+body:has(.hero-story__space) .how-section::after {
+  background-image:
+    radial-gradient(ellipse 38% 20% at 13% 25%, #456ef044, transparent 78%),
+    radial-gradient(ellipse 36% 24% at 88% 72%, #3edbc538, transparent 78%),
+    radial-gradient(circle, #b9d7ffbd 1px, transparent 1.8px),
+    radial-gradient(circle, #efcf92a8 1px, transparent 1.8px);
+  background-size: auto, auto, 181px 163px, 269px 241px;
+  background-repeat: no-repeat, no-repeat, repeat, repeat;
+  opacity: .78;
+  mask-image: linear-gradient(90deg, #0008, #000 15%, #000 85%, #0008);
+  animation: prism-stars-drift 32s ease-in-out infinite alternate;
+}
+
+/* Practice intelligence: a balanced violet and teal aurora behind the two cards. */
+body:has(.hero-story__space) .intelligence-section::before {
+  background-image:
+    radial-gradient(ellipse 43% 36% at 3% 35%, #9764e949, transparent 76%),
+    radial-gradient(ellipse 43% 36% at 97% 70%, #49cdbd3c, transparent 76%),
+    radial-gradient(circle, #d6b8ffbd 1px, transparent 1.8px),
+    radial-gradient(circle, #a7eee1a8 1px, transparent 1.8px);
+  background-size: auto, auto, 199px 181px, 307px 251px;
+  background-repeat: no-repeat, no-repeat, repeat, repeat;
+  opacity: .78;
+  animation: prism-stars-drift 36s ease-in-out infinite alternate-reverse;
+}
+body:has(.hero-story__space) .intelligence-section::after {
+  background: linear-gradient(121deg, transparent 18%, #a46bea14 32%, transparent 45%, transparent 60%, #68deca12 75%, transparent 88%);
+  opacity: .82;
+}
+
+/* Experts: a warm eclipse glow with a light constellation trail. */
+body:has(.hero-story__space) .experts-section::before {
+  background-image:
+    radial-gradient(circle at 84% 48%, transparent 0 19%, #dcaa5d35 19.2%, transparent 19.55%, transparent 25%, #dcaa5d1b 25.2%, transparent 25.5%),
+    radial-gradient(ellipse 43% 48% at 84% 48%, #d99b4640, transparent 73%),
+    radial-gradient(circle, #f1d39bba 1px, transparent 1.8px),
+    radial-gradient(circle, #afbbf59c 1px, transparent 1.8px);
+  background-size: auto, auto, 229px 191px, 311px 273px;
+  background-repeat: no-repeat, no-repeat, repeat, repeat;
+  opacity: .8;
+  animation: prism-stars-drift 38s ease-in-out infinite alternate;
+}
+body:has(.hero-story__space) .experts-section::after {
+  background: linear-gradient(157deg, transparent 0 17%, #dfba7440 17.08%, transparent 17.18% 27%, #dfba7429 27.08%, transparent 27.18%);
+  opacity: .47;
+  mask-image: linear-gradient(90deg, #000, transparent 62%);
+}
+
+/* Plans: two mirrored spectrum washes frame the cards without tinting them. */
+body:has(.hero-story__space) .pricing-section::before {
+  background-image:
+    radial-gradient(ellipse 36% 45% at 0% 50%, #4a6fe552, transparent 76%),
+    radial-gradient(ellipse 36% 45% at 100% 50%, #af73db4b, transparent 76%),
+    radial-gradient(circle, #c4d4ffbf 1px, transparent 1.8px),
+    radial-gradient(circle, #f0cc9cab 1px, transparent 1.8px);
+  background-size: auto, auto, 203px 173px, 293px 263px;
+  background-repeat: no-repeat, no-repeat, repeat, repeat;
+  opacity: .82;
+  animation: prism-stars-drift 35s ease-in-out infinite alternate;
+}
+body:has(.hero-story__space) .pricing-section::after {
+  background: linear-gradient(113deg, transparent 9%, #5776d02c 18%, transparent 29% 71%, #b17bd02a 82%, transparent 91%);
+  opacity: .76;
+}
+
+/* FAQ: paired constellations and fine diagonal rays at the two outer edges. */
+body:has(.hero-story__space) .faq-section::before {
+  background-image:
+    radial-gradient(ellipse 29% 75% at 0% 42%, #557ddd57, transparent 75%),
+    radial-gradient(ellipse 29% 75% at 100% 62%, #4cb5bb43, transparent 75%),
+    radial-gradient(circle, #bedbffdc 1.1px, transparent 1.9px),
+    radial-gradient(circle, #e9d6aebc 1px, transparent 1.8px);
+  background-size: auto, auto, 167px 149px, 251px 227px;
+  background-repeat: no-repeat, no-repeat, repeat, repeat;
+  opacity: .88;
+  mask-image: linear-gradient(90deg, #000, #000 13%, transparent 39%, transparent 61%, #000 87%, #000);
+  animation: prism-stars-drift 30s ease-in-out infinite alternate-reverse;
+}
+body:has(.hero-story__space) .faq-section::after {
+  background: linear-gradient(112deg, transparent 7%, #9abaff38 7.08%, transparent 7.2% 13%, #9abaff27 13.08%, transparent 13.2% 86%, #92e1d529 86.08%, transparent 86.2% 92%, #92e1d538 92.08%, transparent 92.2%);
+  opacity: .5;
+}
+
+/* Footer: a centered spectrum horizon, fading outward from the brand. */
+body:has(.hero-story__space) .site-footer::before {
+  background-image:
+    radial-gradient(ellipse 56% 80% at 50% 100%, #c7984740, transparent 76%),
+    linear-gradient(90deg, transparent, #5575e038 27%, #9a75cc45 46%, #d5a45942 67%, transparent),
+    radial-gradient(circle, #f1d79bb8 1px, transparent 1.8px),
+    radial-gradient(circle, #b9d1ff9e 1px, transparent 1.8px);
+  background-size: auto, 100% 2px, 263px 211px, 349px 277px;
+  background-position: center, center top, 0 0, 37px 49px;
+  background-repeat: no-repeat, no-repeat, repeat, repeat;
+  opacity: .79;
+  animation: prism-footer-drift 40s ease-in-out infinite alternate;
+}
+body:has(.hero-story__space) .site-footer::after {
+  inset: 0 12%;
+  border-top: 1px solid #d2ae6952;
+  box-shadow: 0 -16px 44px #ae855020;
+  mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+}
+
+@keyframes prism-stars-drift {
+  from { background-position: center, center, 0 0, 37px 49px; }
+  to { background-position: center, center, 17px -18px, 11px 31px; }
+}
+
+@keyframes prism-footer-drift {
+  from { background-position: center, center top, 0 0, 37px 49px; }
+  to { background-position: center, center top, 17px -18px, 11px 31px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .how-section::after,
+  .intelligence-section::before,
+  .experts-section::before,
+  .pricing-section::before,
+  .faq-section::before,
+  .site-footer::before { animation: none; }
+}

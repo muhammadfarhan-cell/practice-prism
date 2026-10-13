@@ -1,19 +1,30 @@
-# SaaS product website
+# Practice Prism landing page
 
-React, TypeScript, Vite, and Motion starter for an animated SaaS product website. The entrance animation respects reduced motion settings.
+React, TypeScript, Vite, and Motion landing page with two independent design versions.
 
 ## Run locally
 
+Requires Node.js 20.19+ or 22.12+.
+
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-Open the local URL printed by Vite. Run `npm run build` to typecheck and create a production build.
+Open `/v1` for the original design or `/v2` for the updated space and spectrum design. The root URL redirects to `/v1`.
 
-## Structure
+## Build and preview
 
-- `src/App.tsx` — current page shell; replace with the product sections when the design is ready.
-- `src/components/Reveal.tsx` — reusable entrance animation with reduced motion support.
-- `src/styles/global.css` — global styles and starter design values.
-- `public/` — static assets such as logos and images.
+```bash
+npm run build
+npm run preview
+```
+
+The build writes the static site to `dist/`. When deploying to a static host, configure it to serve `index.html` for direct requests to `/v1` and `/v2`.
+
+## Project structure
+
+- `src/pages/v1/` — original landing page and its components
+- `src/pages/v2/` — updated landing page and its separate components
+- `src/App.tsx` — route selection
+- `public/` — image and logo assets

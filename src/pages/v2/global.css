@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600&display=swap');
+
+:root { font-family: 'DM Sans', sans-serif; color: #f9f7f1; background: #080d1e; font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 0; }
+a { color: inherit; text-decoration: none; }
+button, a { -webkit-tap-highlight-color: transparent; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.button { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 23px; border-radius: 8px; font-weight: 700; font-size: 13px; transition: transform .2s ease, background .2s ease, box-shadow .2s ease; white-space: nowrap; }
+.button:hover { transform: translateY(-2px); }
+.button:focus-visible, a:focus-visible { outline: 2px solid #eecf8e; outline-offset: 4px; }
+.button--gold { background: #dfb86a; color: #13182b; box-shadow: 0 9px 29px #b88b3350; }
+.button--gold:hover { background: #efce8e; box-shadow: 0 11px 34px #b88b336b; }
+.button--dark { border: 1px solid #6e7584; color: #f8f7f4; background: #ffffff0b; }
+.button--dark:hover { background: #ffffff1a; }
+.site-header { height: 96px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; overflow: hidden; background: #080d1ef2; border-bottom: 1px solid #ffffff13; backdrop-filter: blur(18px); transform: translateY(0); transition: transform .36s cubic-bezier(.22,.8,.2,1); }
+.site-header--hidden:not(:has(:focus-visible)) { transform: translateY(-100%); pointer-events: none; }
+.site-header::before { content: ''; position: absolute; inset: -12%; pointer-events: none; background: url('/v2-hero-starfield.jpg') center top / cover no-repeat; opacity: .3; animation: header-stars-drift 42s ease-in-out infinite alternate; }
+.site-header__inner { position: relative; z-index: 1; width: min(100% - 60px, 1360px); height: 100%; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: clamp(12px, 2.5vw, 36px); }
+@keyframes header-stars-drift { from { transform: scale(1.025) translate3d(0, 0, 0); opacity: .27; } to { transform: scale(1.08) translate3d(-1.2%, -.8%, 0); opacity: .35; } }
+.site-header__brand { display: flex; width: 142px; height: 70px; align-items: center; overflow: hidden; flex: none; }
+.site-header__brand img { display: block; width: 150px; height: 150px; object-fit: contain; margin-left: -4px; }
+.site-header__nav { display: flex; align-items: center; gap: clamp(15px, 3vw, 46px); margin-left: auto; margin-right: clamp(8px, 2.5vw, 42px); }
+.site-header__nav a, .site-header__login { font-size: 14px; color: #e4e5e9; transition: color .2s ease; white-space: nowrap; }
+.site-header__nav a:hover, .site-header__login:hover { color: #e4bb70; }
+.site-header__actions { display: flex; align-items: center; gap: clamp(10px, 2vw, 29px); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .button, .site-header { transition: none; } .site-header::before { animation: none; } }
