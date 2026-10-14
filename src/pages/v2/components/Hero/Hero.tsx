@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState, type CSSProperties } from 'react'
 import { useReducedMotion } from 'motion/react'
-import { DashboardPreview } from './DashboardPreview'
 import './Hero.css'
 
 type Stream = {
@@ -26,9 +25,11 @@ const dataAbsorption = [
 const categoryAbsorption = { start: 5.4, end: 6.7 }
 const logoEntrance = 1.2
 const logoTravel = 2.25
-const dashboardReveal = 7.4
-const finalLayout = 9.8
-const animationEnd = 10.2
+const prismShiftStart = 6.65
+const prismShiftEnd = 7.85
+const beamStart = 7.65
+const beamEnd = 8.7
+const animationEnd = 10.5
 
 function clamp(value: number) {
   return Math.max(0, Math.min(1, value))
@@ -41,6 +42,10 @@ function smoothstep(value: number) {
 
 function prismCenterAt(seconds: number) {
   return 1655 - 935 * smoothstep((seconds - logoEntrance) / logoTravel)
+}
+
+function prismDisplayCenterAt(seconds: number) {
+  return prismCenterAt(seconds) - 330 * smoothstep((seconds - prismShiftStart) / (prismShiftEnd - prismShiftStart))
 }
 
 function waveY(baseY: number, strand: number, x: number, endX: number) {
@@ -59,13 +64,15 @@ function wavePath(baseY: number, strand: number, startX: number, endX: number) {
 
 function WaveScene({ phase, seconds, bleed }: { phase: number; seconds: number; bleed: number }) {
   const prismCenter = prismCenterAt(seconds)
+  const prismDisplayCenter = prismDisplayCenterAt(seconds)
+  const beamProgress = smoothstep((seconds - beamStart) / (beamEnd - beamStart))
   const waveOpacity = 1 - smoothstep((seconds - categoryAbsorption.end) / .6)
   const fadeStart = Math.max(0, prismCenter - 220)
   const fadeEnd = Math.max(fadeStart + 1, prismCenter + 90)
   const waveStart = -bleed - 40
   const waveEnd = 1440 + bleed
   return (
-    <div className={`wave-scene wave-scene--phase-${phase}`} aria-hidden={phase >= 3}>
+    <div className={`wave-scene wave-scene--phase-${phase}`} aria-hidden="true">
       <svg
         className="wave-scene__lines"
         viewBox={`${-bleed} 0 ${1440 + bleed * 2} 900`}
@@ -124,7 +131,13 @@ function WaveScene({ phase, seconds, bleed }: { phase: number; seconds: number; 
         )
       }))}
 
-      <div className="wave-scene__prism-wrap" style={{ left: prismCenter - 185 }}>
+      <svg className="wave-scene__gold-beam" viewBox="0 0 1440 900" aria-hidden="true" style={{ opacity: beamProgress }}>
+        <path className="wave-scene__gold-glow" d={`M ${prismDisplayCenter + 65} 450 H 855`} pathLength="1" style={{ strokeDashoffset: 1 - beamProgress }} />
+        <path className="wave-scene__gold-core" d={`M ${prismDisplayCenter + 65} 450 H 855`} pathLength="1" style={{ strokeDashoffset: 1 - beamProgress }} />
+        <circle className="wave-scene__gold-end" cx="855" cy="450" r="4" style={{ opacity: smoothstep((beamProgress - .92) / .08) }} />
+      </svg>
+
+      <div className="wave-scene__prism-wrap" style={{ left: prismDisplayCenter - 185 }}>
         <img src="/hero-prism.svg" className="wave-scene__prism" alt="" />
       </div>
       <div className="wave-scene__flash" />
@@ -138,7 +151,9 @@ export function Hero() {
   const [run, setRun] = useState(0)
   const [layout, setLayout] = useState({ scale: 1, bleed: 0 })
   const seconds = elapsed / 1000
-  const phase = seconds < logoEntrance ? 0 : seconds < logoEntrance + logoTravel ? 1 : seconds < dashboardReveal ? 2 : seconds < finalLayout ? 3 : 4
+  const phase = seconds < logoEntrance ? 0 : seconds < logoEntrance + logoTravel ? 1 : seconds < prismShiftStart ? 2 : seconds < beamEnd ? 3 : 4
+  const messageVisible = seconds >= 7.9
+  const outcomes = ['Clarity.', 'Profitability.', 'Power.']
 
   useEffect(() => {
     const measure = () => {
@@ -180,28 +195,18 @@ export function Hero() {
       <div className="hero-story__canvas" id="top" style={{ transform: `translate(-50%, -50%) scale(${layout.scale})` }}>
         <WaveScene phase={phase} seconds={seconds} bleed={layout.bleed} />
 
-        <div className={`dashboard-stage dashboard-stage--phase-${phase}`} aria-hidden={phase < 3}>
-          <div className="dashboard-stage__frame"><DashboardPreview /></div>
-        </div>
-
-        <div className={`final-stage ${phase === 4 ? 'is-visible' : ''}`} aria-hidden={phase !== 4} inert={phase !== 4}>
-          <span className="final-stage__eyebrow">AI PRACTICE INTELLIGENCE FOR CHIROPRACTIC</span>
-          <h1>Your whole practice.<br />One clear answer.</h1>
-          <div className="final-stage__insight">
-            <span className="final-stage__kicker">PRACTICE INSIGHTS</span>
-            <h2>What the numbers<br />are telling you.</h2>
-            <p className="final-stage__support">Your practice data becomes a clearer view of what matters most.</p>
-            <p className="final-stage__next">Connect your practice data, ask a question, and find a clear next step.</p>
-            <div className="final-stage__outcomes">
-              <div><i className="blue" />Clarity</div>
-              <div><i className="purple" />Profitability</div>
-              <div><i className="gold" />Power</div>
-            </div>
-            <div className="final-stage__progress"><span /></div>
-            <small>Your dashboard, your practice, one clear view.</small>
+        <div className="final-stage" aria-hidden={!messageVisible} inert={!messageVisible}>
+          <span className={`final-stage__eyebrow${messageVisible ? ' is-visible' : ''}`}>AI PRACTICE INTELLIGENCE FOR CHIROPRACTIC</span>
+          <h1 className={messageVisible ? 'is-visible' : ''}>Your whole practice.<br /><em>One clear answer.</em></h1>
+          <div className="final-stage__outcomes" aria-label="Clarity, Profitability, Power">
+            {outcomes.map((word, index) => (
+              <span key={word} className={seconds >= 8.65 + index * .32 ? 'is-visible' : ''}>{word}</span>
+            ))}
           </div>
-          <div className="final-stage__actions"><a className="button button--gold" href="#plans">Get Clarity with Prism</a><button className="button button--dark" type="button" onClick={replay}>See how it works</button></div>
-          <span className="final-stage__trial">Start with a 7-day free trial</span>
+          <div className={`final-stage__actions${seconds >= 9.8 ? ' is-visible' : ''}`}>
+            <a className="button button--gold" href="#plans">Get Clarity with Prism</a>
+            <button className="button button--dark" type="button" onClick={replay}>Replay the story</button>
+          </div>
         </div>
       </div>
     </section>
