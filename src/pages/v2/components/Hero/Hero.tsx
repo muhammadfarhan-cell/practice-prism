@@ -17,19 +17,14 @@ const streams: Stream[] = [
   { name: 'MARKETING', color: '#bb96e5', y: 655, badgeX: 235, badgeY: 625, particles: [{ label: 'Leads', x: 615 }, { label: 'Ad Spend', x: 940 }] },
 ]
 
-// The three chips in each vertical column travel together into the Prism.
-const dataAbsorption = [
-  { start: 4.25, end: 5.25 }, // Revenue, Visits, Leads
-  { start: 2.9, end: 4.2 }, // Budgets, New Patients, Ad Spend
-]
-const categoryAbsorption = { start: 5.4, end: 6.7 }
-const logoEntrance = 1.2
-const logoTravel = 2.25
-const prismShiftStart = 6.65
-const prismShiftEnd = 7.85
-const beamStart = 7.65
-const beamEnd = 8.7
-const animationEnd = 10.5
+// The Prism passes each column while it moves left; the light begins with the first absorption.
+const rightColumn = { start: 3.05, end: 3.55 }
+const middleColumn = { start: 4.05, end: 4.55 }
+const leftColumn = { start: 5.2, end: 5.85 }
+const logoEntrance = 1.1
+const logoExit = 7.9
+const beamStart = 3.05
+const animationEnd = 10.4
 
 function clamp(value: number) {
   return Math.max(0, Math.min(1, value))
@@ -41,11 +36,7 @@ function smoothstep(value: number) {
 }
 
 function prismCenterAt(seconds: number) {
-  return 1655 - 935 * smoothstep((seconds - logoEntrance) / logoTravel)
-}
-
-function prismDisplayCenterAt(seconds: number) {
-  return prismCenterAt(seconds) - 330 * smoothstep((seconds - prismShiftStart) / (prismShiftEnd - prismShiftStart))
+  return 1655 - 2155 * clamp((seconds - logoEntrance) / (logoExit - logoEntrance))
 }
 
 function waveY(baseY: number, strand: number, x: number, endX: number) {
@@ -55,30 +46,49 @@ function waveY(baseY: number, strand: number, x: number, endX: number) {
   return (baseY + strand * 5 + ripple) * (1 - ease) + (450 + strand * 1.2) * ease
 }
 
-function wavePath(baseY: number, strand: number, startX: number, endX: number) {
+function convergedWaveY(baseY: number, strand: number, x: number, prismCenter: number, seconds: number) {
+  const originalY = waveY(baseY, strand, x, 1440)
+  const approach = smoothstep((seconds - logoEntrance) / .65)
+  const funnel = smoothstep((x - (prismCenter - 530)) / 390) * approach
+  return originalY + (425 + strand * .7 - originalY) * funnel
+}
+
+function wavePath(baseY: number, strand: number, startX: number, endX: number, prismCenter: number, seconds: number) {
   return Array.from({ length: 61 }, (_, index) => {
     const x = startX + ((endX - startX) * index) / 60
-    return `${index === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${waveY(baseY, strand, x, 1440).toFixed(1)}`
+    return `${index === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${convergedWaveY(baseY, strand, x, prismCenter, seconds).toFixed(1)}`
   }).join(' ')
 }
 
-function WaveScene({ phase, seconds, bleed }: { phase: number; seconds: number; bleed: number }) {
+function chipApproach(seconds: number, start: number, end: number) {
+  return smoothstep((seconds - (start - .85)) / (end - start + .85))
+}
+
+function chipOpacity(progress: number, chipX: number, prismCenter: number) {
+  const passedIntoPrism = smoothstep((chipX - (prismCenter - 10)) / 110)
+  return (1 - progress) * (1 - passedIntoPrism)
+}
+
+function WaveScene({ seconds, bleed }: { seconds: number; bleed: number }) {
   const prismCenter = prismCenterAt(seconds)
-  const prismDisplayCenter = prismDisplayCenterAt(seconds)
-  const beamProgress = smoothstep((seconds - beamStart) / (beamEnd - beamStart))
-  const waveOpacity = 1 - smoothstep((seconds - categoryAbsorption.end) / .6)
-  const fadeStart = Math.max(0, prismCenter - 220)
-  const fadeEnd = Math.max(fadeStart + 1, prismCenter + 90)
+  const prismOpacity = smoothstep((seconds - logoEntrance) / .45) * (1 - smoothstep((seconds - 6.8) / .65))
+  const beamArrival = smoothstep((seconds - beamStart) / .24)
+  const beamOpacity = beamArrival * (1 - .68 * smoothstep((seconds - 7.65) / .85))
+  const emissionOpacity = beamArrival * (1 - smoothstep((seconds - 3.65) / .65))
+  const sourceOpacity = beamArrival * (1 - smoothstep((seconds - 6.65) / .65))
+  const waveOpacity = 1 - smoothstep((seconds - leftColumn.end) / .7)
+  const fadeStart = Math.max(0, prismCenter - 165 + bleed)
+  const fadeEnd = Math.max(fadeStart + 1, prismCenter + 55 + bleed)
   const waveStart = -bleed - 40
   const waveEnd = 1440 + bleed
   return (
-    <div className={`wave-scene wave-scene--phase-${phase}`} aria-hidden="true">
+    <div className="wave-scene" aria-hidden="true">
       <svg
         className="wave-scene__lines"
         viewBox={`${-bleed} 0 ${1440 + bleed * 2} 900`}
         preserveAspectRatio="none"
         aria-hidden="true"
-        style={{ left: -bleed, width: 1440 + bleed * 2, maskImage: `linear-gradient(to right, #000 0px, #000 ${fadeStart + bleed}px, transparent ${fadeEnd + bleed}px)`, opacity: waveOpacity }}
+        style={{ left: -bleed, width: 1440 + bleed * 2, maskImage: `linear-gradient(to right, #000 0px, #000 ${fadeStart}px, transparent ${fadeEnd}px)`, opacity: waveOpacity }}
       >
         {streams.map(stream => (
           <g key={stream.name} className="wave-scene__stream" style={{ '--wave-color': stream.color } as CSSProperties}>
@@ -86,61 +96,68 @@ function WaveScene({ phase, seconds, bleed }: { phase: number; seconds: number; 
               <path
                 key={index}
                 className={index === 4 ? 'wave-scene__bright' : ''}
-                d={wavePath(stream.y, index - 4, waveStart, waveEnd)}
+                d={wavePath(stream.y, index - 4, waveStart, waveEnd, prismCenter, seconds)}
               />
             ))}
             <path
               className="wave-scene__pulse"
-              d={wavePath(stream.y, 0, waveStart, waveEnd)}
+              d={wavePath(stream.y, 0, waveStart, waveEnd, prismCenter, seconds)}
             />
           </g>
         ))}
       </svg>
 
       {streams.map(stream => {
-        const { start, end } = categoryAbsorption
+        const { start, end } = leftColumn
         const progress = smoothstep((seconds - start) / (end - start))
-        const x = stream.badgeX + (720 - stream.badgeX) * progress
-        const lineY = stream.badgeY + waveY(stream.y, 0, x, 1440) - waveY(stream.y, 0, stream.badgeX, 1440)
-        const y = lineY + (432 - lineY) * smoothstep((progress - .7) / .3)
-        const absorb = smoothstep((seconds - (end - .38)) / .38)
+        const x = stream.badgeX + 70 * chipApproach(seconds, start, end)
+        const originalOffset = stream.badgeY - waveY(stream.y, 0, stream.badgeX, 1440)
+        const funnel = smoothstep((x - (prismCenter - 530)) / 390) * smoothstep((seconds - logoEntrance) / .65)
+        const y = convergedWaveY(stream.y, 0, x, prismCenter, seconds) + originalOffset * (1 - funnel)
         return (
           <span
             className="wave-scene__badge"
             key={stream.name}
-            style={{ left: x, top: y, opacity: 1 - absorb, transform: `scale(${1 - absorb * .82})`, '--wave-color': stream.color } as CSSProperties}
+            style={{ left: x, top: y, opacity: chipOpacity(progress, x, prismCenter), transform: `scale(${1 - progress * .84})`, '--wave-color': stream.color } as CSSProperties}
           ><i />{stream.name}</span>
         )
       })}
 
       {streams.flatMap(stream => stream.particles.map((particle, index) => {
-        const { start, end } = dataAbsorption[index]
-        const startX = particle.x - (index === 0 ? 190 : 300)
-        const interceptX = prismCenterAt(end)
-        const x = startX + (interceptX - startX) * smoothstep((seconds - start) / (end - start))
-        const y = waveY(stream.y, 0, x, 1440)
-        const absorb = smoothstep((seconds - (end - .38)) / .38)
+        const { start, end } = index === 0 ? middleColumn : rightColumn
+        const progress = smoothstep((seconds - start) / (end - start))
+        const x = particle.x + 70 * chipApproach(seconds, start, end)
+        const y = convergedWaveY(stream.y, 0, x, prismCenter, seconds)
         return (
           <span
             className="wave-scene__particle"
             key={particle.label}
-            style={{ left: x, top: y - 18, opacity: 1 - absorb, transform: `scale(${1 - absorb * .85})`, '--wave-color': stream.color } as CSSProperties}
+            style={{ left: x, top: y - 18, opacity: chipOpacity(progress, x, prismCenter), transform: `scale(${1 - progress * .85})`, '--wave-color': stream.color } as CSSProperties}
           >
             <i />{particle.label}
           </span>
         )
       }))}
 
-      <svg className="wave-scene__gold-beam" viewBox="0 0 1440 900" aria-hidden="true" style={{ opacity: beamProgress }}>
-        <path className="wave-scene__gold-glow" d={`M ${prismDisplayCenter + 65} 450 H 855`} pathLength="1" style={{ strokeDashoffset: 1 - beamProgress }} />
-        <path className="wave-scene__gold-core" d={`M ${prismDisplayCenter + 65} 450 H 855`} pathLength="1" style={{ strokeDashoffset: 1 - beamProgress }} />
-        <circle className="wave-scene__gold-end" cx="855" cy="450" r="4" style={{ opacity: smoothstep((beamProgress - .92) / .08) }} />
+      <svg className="wave-scene__gold-beam" viewBox={`${-bleed} 0 ${1440 + bleed * 2} 900`} aria-hidden="true" style={{ left: -bleed, width: 1440 + bleed * 2, opacity: beamOpacity }}>
+        <defs>
+          <linearGradient id="hero-output-gold" gradientUnits="userSpaceOnUse" x1="-400" y1="425" x2="1440" y2="425">
+            <stop stopColor="#a66517" />
+            <stop offset=".45" stopColor="#e1ad4c" />
+            <stop offset=".78" stopColor="#fff0aa" />
+            <stop offset="1" stopColor="#c18729" />
+          </linearGradient>
+        </defs>
+        <path className="wave-scene__gold-glow" d={`M ${Math.min(prismCenter + 85, waveEnd)} 425 H ${waveEnd}`} />
+        <path className="wave-scene__gold-halo" d={`M ${Math.min(prismCenter + 85, waveEnd)} 425 H ${waveEnd}`} />
+        <path className="wave-scene__gold-core" d={`M ${Math.min(prismCenter + 85, waveEnd)} 425 H ${waveEnd}`} />
       </svg>
 
-      <div className="wave-scene__prism-wrap" style={{ left: prismDisplayCenter - 185 }}>
+      <div className="wave-scene__prism-wrap" style={{ left: prismCenter - 185, opacity: prismOpacity }}>
         <img src="/hero-prism.svg" className="wave-scene__prism" alt="" />
       </div>
-      <div className="wave-scene__flash" />
+      <div className="wave-scene__emission" style={{ left: prismCenter + 85, top: 425, opacity: emissionOpacity }} />
+      <div className="wave-scene__source" style={{ left: prismCenter + 85, top: 425, opacity: sourceOpacity }} />
     </div>
   )
 }
@@ -151,8 +168,7 @@ export function Hero() {
   const [run, setRun] = useState(0)
   const [layout, setLayout] = useState({ scale: 1, bleed: 0 })
   const seconds = elapsed / 1000
-  const phase = seconds < logoEntrance ? 0 : seconds < logoEntrance + logoTravel ? 1 : seconds < prismShiftStart ? 2 : seconds < beamEnd ? 3 : 4
-  const messageVisible = seconds >= 7.9
+  const messageVisible = seconds >= 8
   const outcomes = ['Clarity.', 'Profitability.', 'Power.']
 
   useEffect(() => {
@@ -193,17 +209,17 @@ export function Hero() {
     <section className="hero-story" id="story" aria-label="Practice Prism product story">
       <div className="hero-story__space" aria-hidden="true" />
       <div className="hero-story__canvas" id="top" style={{ transform: `translate(-50%, -50%) scale(${layout.scale})` }}>
-        <WaveScene phase={phase} seconds={seconds} bleed={layout.bleed} />
+        <WaveScene seconds={seconds} bleed={layout.bleed} />
 
         <div className="final-stage" aria-hidden={!messageVisible} inert={!messageVisible}>
           <span className={`final-stage__eyebrow${messageVisible ? ' is-visible' : ''}`}>AI PRACTICE INTELLIGENCE FOR CHIROPRACTIC</span>
           <h1 className={messageVisible ? 'is-visible' : ''}>Your whole practice.<br /><em>One clear answer.</em></h1>
           <div className="final-stage__outcomes" aria-label="Clarity, Profitability, Power">
             {outcomes.map((word, index) => (
-              <span key={word} className={seconds >= 8.65 + index * .32 ? 'is-visible' : ''}>{word}</span>
+              <span key={word} className={seconds >= 8.45 + index * .24 ? 'is-visible' : ''}>{word}</span>
             ))}
           </div>
-          <div className={`final-stage__actions${seconds >= 9.8 ? ' is-visible' : ''}`}>
+          <div className={`final-stage__actions${seconds >= 9.5 ? ' is-visible' : ''}`}>
             <a className="button button--gold" href="#plans">Get Clarity with Prism</a>
             <button className="button button--dark" type="button" onClick={replay}>Replay the story</button>
           </div>
